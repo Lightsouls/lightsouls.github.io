@@ -1,0 +1,52 @@
+.steam-page-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.steam-subtitle {
+    font-size: 1.2rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.masonry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2rem;
+}
+
+.steam-game-item {
+    background: #f8f8f8;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.steam-game-item:hover {
+    transform: translateY(-5px);
+}
+
+.steam-game-cover {
+    width: 100%;
+    display: block;
+}
+
+.steam-game-info {
+    padding: 0.8rem 1rem;
+}
+
+.steam-game-title {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.steam-game-meta {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
