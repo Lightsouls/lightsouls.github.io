@@ -1,32 +1,47 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const container = document.getElementById('steam-game-list');
+const STEAM_API_PROXY = "https://quiet-frog-4a34.lsaacfriedrich.workers.dev/?steamid=76561198360304695";
+async function fetchSteamGames() {
+    try {
+        const res = await fetch(STEAM_API_PROXY);
+        const data = await res.json();
 
-    const mockData = [
-        {
-            name: "Hades",
-            img: "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/header.jpg",
-            playtime: 7200,
-            lastPlayed: "2024-12-03"
-        },
-        {
-            name: "Portal 2",
-            img: "https://cdn.cloudflare.steamstatic.com/steam/apps/620/header.jpg",
-            playtime: 1200,
-            lastPlayed: "2024-11-15"
+        // 输出数据调试，检查数据结构
+        console.log('获取到的数据:', data);
+
+        if (!data.games) {
+            console.error("数据格式不正确，未找到 'games' 字段");
+            return;
         }
-    ];
 
-    mockData.forEach(game => {
-        const gameCard = document.createElement("div");
-        gameCard.className = "game-card";
-        gameCard.innerHTML = `
-      <img src="${game.img}" alt="${game.name}" />
-      <div class="game-info">
-        <h3>${game.name}</h3>
-        <p>已游玩时间：${Math.round(game.playtime / 60)} 小时</p>
-        <p>最近游玩：${game.lastPlayed}</p>
-      </div>
-    `;
-        container.appendChild(gameCard);
-    });
-});
+        const container = document.getElementById("steam-game-list");
+        data.games
+            .sort((a, b) => b.playtime_forever - a.playtime_forever)
+            .forEach(game => {
+                const gameElement = document.createElement("div");
+                gameElement.className = "steam-game-item";
+                const playHours = (game.playtime_forever / 60).toFixed(1);
+
+                // 处理最近游玩的时间，检查 rtime_last_played 字段是否存在
+                const lastPlayed = game.rtime_last_played
+                    ? new Date(game.rtime_last_played * 1000).toLocaleDateString() // 将时间戳转为日期格式
+                    : "未知"; // 如果没有数据，显示“未知”
+
+                gameElement.innerHTML = `
+          <img class="steam-game-cover" src="https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg" alt="${game.name}">
+          <div class="steam-game-info">
+            <div class="steam-game-title">${game.name}</div>
+            <div class="steam-game-meta">
+              <span>总时长：${playHours} 小时</span><br>
+              <span>最近游玩：${lastPlayed}</span>
+            </div>
+          </div>
+        `;
+                container.appendChild(gameElement);
+            });
+    } catch (error) {
+        console.error("无法加载 Steam 游戏数据：", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", fetchSteamGames);
+
+
