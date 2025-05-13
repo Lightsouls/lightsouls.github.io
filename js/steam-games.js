@@ -18,12 +18,9 @@ async function fetchSteamGames() {
             .forEach(game => {
                 const gameElement = document.createElement("div");
                 gameElement.className = "steam-game-item";
-                const playHours = (game.playtime_forever / 60).toFixed(1);
-
+                const playHours = (game.playtime_forever / 60).toFixed(1);h
                 // 处理最近游玩的时间，检查 rtime_last_played 字段是否存在
-                const lastPlayed = game.rtime_last_played
-                    ? new Date(game.rtime_last_played * 1000).toLocaleDateString() // 将时间戳转为日期格式
-                    : "未知"; // 如果没有数据，显示“未知”
+                const lastPlayed = game.lastPlayed || "未知";
 
                 gameElement.innerHTML = `
           <img class="steam-game-cover" src="https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg" alt="${game.name}">
